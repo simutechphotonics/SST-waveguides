@@ -1,0 +1,98 @@
+newmode; newmode; redrawoff;
+
+#define wafer
+thick_Clad = 2.0e-6;
+thick_Si = 0.22e-6; #height of wg
+thick_BOX = 2.0e-6;
+thick_Slab = 0.0e-6; #include if slab, 0 for strip
+width_Si = 0.5e-6; #width of wg
+
+#materials
+material_Clad = "SiO2 (Glass) - Palik";
+material_BOX = "SiO2 (Glass) - Palik";
+material_Si = "Si (Silicon) - Palik";
+#materials;
+
+#simulation region
+sim_width = 2.0e-6; #span amount around wg
+sim_height = 1.0e-6; #span amount around wg
+Xmin = -2e-6; #length of waveguide, propagation in X-axis, z is wafer normal
+Xmax = 2e-6;
+Zmin = -sim_height;
+Zmax = thick_Si+sim_height;
+X_span = 2*sim_width+width_Si;
+Ymin = -X_span/2;
+Ymax = -Xmin;
+
+#draw cladding
+addrect;
+set("name","cladding");
+set("material",material_Clad);
+set("x",0);
+set("x span", X_span+1e-6);
+set("z min",0);
+set("z max", thick_Clad);
+set("y min",Ymin);
+set("y max",Ymax);
+set("override mesh order from material database", 1);
+set("mesh order",3); #put clading at the very back
+set("alpha",0.3);
+
+#draw BOX
+addrect;
+set("name","BOX");
+set("material",material_BOX);
+set("y min",Ymin);
+set("y max",Ymax);
+set("z min",-thick_BOX);
+set("z max",0);
+set("x",0);
+set("x span",X_span+1e-6);
+set("alpha",0.4);
+
+#draw si wafer
+addrect;
+set("name","wafer");
+set("material",material_Si);
+set("y min", Ymin);
+set("y max", Ymax);
+set("z min",-thick_BOX);
+set("z max",-thick_BOX-2e6);
+set("x",0);
+set("x span",X_span+1e-6);
+
+#draw wg
+addrect;
+set("name","waveguide");
+set("material",material_Si);
+set("y min", Ymin);
+set("y max", Ymax);
+set("z min",0);
+set("z max",thick_Si);
+set("x",0);
+set("x span",width_Si);
+
+#draw slab
+if(thick_Slab!=0){
+    addrect;
+    set("name","slab");
+    set("material",material_Si);
+    set("x",0);
+    set("x span", X_span+1e-6);
+    set("z min",0);
+    set("z max",thick_Slab);
+    set("y min",Ymin);
+    set("y max", Ymax);
+
+}
+
+addfde;
+set("solver type",2);
+set("x",0);
+set("x span",sim_width);
+set("z",0);
+set("z span",sim_height);
+set("y",0);
+set("mesh cells x",120);
+set("mesh cells z",120);
+#findmodes;

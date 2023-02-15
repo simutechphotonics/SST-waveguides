@@ -1,0 +1,34 @@
+function CalcNeffSweepWidth(wavelength,modes,wg_start,wg_end,wg_step){
+    #sim setup
+    #modes=4; #number of modes to output
+    select("FDE");
+    set("wavelength",wavelength*1e-6);
+    set("number of trial modes",modes+2);
+    
+    #sweep params
+    #wgwidth_array=[.2:.02:.8]*1e-6;
+    wgwidth_array=[wg_start:wg_step:wg_end]*1e-6;
+    neff = matrix(length(wgwidth_array),modes);
+    #TE_pol = matrix(length(wgwidth_array),modes);
+    
+    for(i=1:length(wgwidth_array)){
+        switchtolayout;
+        setnamed("waveguide","x span",wgwidth_array(i));
+        n=findmodes;
+        for (j=1:modes){
+            #extract mode data
+            neff(i,j) = abs(getdata("FDE::data::mode"+num2str(j),"neff"));
+            #TE_pol(i,j)=getdata("FDE::data::mode"+num2str(j),"TE polarization fraction");
+        }
+    }
+    #data = matrix(1,2);
+    #data(1,1) = wgwidth_array;
+    #data(1,2) = neff;
+    
+    plot(wgwidth_array*1e6,neff);
+    
+    return neff;
+}
+
+#CalcNeffSweepWidth(1.55,4,0.2,0.8,0.02);
+#CalcNeffSweepWidth(1.31,4,0.2,0.8,0.02);
