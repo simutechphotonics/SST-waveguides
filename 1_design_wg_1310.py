@@ -18,13 +18,14 @@ import lumapi #lumerical's python api
 import numpy as np
 mode1=lumapi.MODE(); #Creates a MODE object to access MODE related functions
 
-#PARAMS
+#PARAMETERS
 wavelength=1.31 #in um
 modes=4 #number of modes to track
 wg_start=0.2 #um 
 wg_end=0.8 #um
 wg_step=0.02 #um, step size of the waveguide range
 
+#MODE SIMULATION
 code = open('wg_2d_draw.lsf').read() #loads the wg setup file to create the geometry
 mode1.eval(code) #executes the code
 code = open('wg_2d_neff_sweep_width.lsf').read() #loads the lsf file with the `neff sweep` function, see line 23
@@ -32,6 +33,7 @@ mode1.eval(code)
 neff = mode1.CalcNeffSweepWidth(wavelength,modes,wg_start,wg_end,wg_step) #calls the neff sweep function written in the lsf file. `neff` is given the return value specified in the lsf file.
 wgwidth = np.arange(wg_start,wg_end,wg_step) #sets up an np array, used for plotting. Can also read out from the MODE object, but results are the same.
 
-np.save("neff"+str(int(wavelength*1000)),neff) #save results as .npy files
+#SAVE RAW DATA
+np.save("neff"+str(int(wavelength*1000)),neff) #save results as .npy files with names specifying the wavelength from line 22
 np.save("wgwidth"+str(int(wavelength*1000)),wgwidth)
 print('Complete')

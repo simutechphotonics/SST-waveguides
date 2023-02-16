@@ -1,34 +1,44 @@
+#SimuTech Group
+#Author: Stephen Lin
+#Date: 2023
+#Ths script is provided by SimuTech's SimuSkills platform.
+#Access to this script is provided along with the TECH support package by SimuTech.
+#The content provided should NOT be shared publicly.
+#The scripts and files included are for educational purpose for SimuTech Group's customers.
+#Customers are free to utilize the scripts and files in their own product design flows.
+
+#This script sweeps through a range of waveguide sizes and returns the neff value
+#note, this script does not use the built-in GUI sweep function, instead it manually does it through script 
+
 function CalcNeffSweepWidth(wavelength,modes,wg_start,wg_end,wg_step){
-    #sim setup
-    #modes=4; #number of modes to output
+    #SETUP SIMULATION
     select("FDE");
     set("wavelength",wavelength*1e-6);
     set("number of trial modes",modes+2);
     
-    #sweep params
-    #wgwidth_array=[.2:.02:.8]*1e-6;
+    #DEFINE SWEEP
     wgwidth_array=[wg_start:wg_step:wg_end]*1e-6;
     neff = matrix(length(wgwidth_array),modes);
-    #TE_pol = matrix(length(wgwidth_array),modes);
-    
+    #TE_pol = matrix(length(wgwidth_array),modes); #Optionally, can also extract TE_pol
+
+    #SWEEP
     for(i=1:length(wgwidth_array)){
-        switchtolayout;
-        setnamed("waveguide","x span",wgwidth_array(i));
-        n=findmodes;
+        switchtolayout; #GUI: return back to 'layout' mode within the GUI, enables adjustments to objects
+        setnamed("waveguide","x span",wgwidth_array(i)); #set the object named waveguide's xspan
+        n=findmodes; #findmodes is equivalent to the GUI 'RUN' button when using an FDE region
         for (j=1:modes){
-            #extract mode data
-            neff(i,j) = abs(getdata("FDE::data::mode"+num2str(j),"neff"));
-            #TE_pol(i,j)=getdata("FDE::data::mode"+num2str(j),"TE polarization fraction");
+            neff(i,j) = abs(getdata("FDE::data::mode"+num2str(j),"neff")); #extract mode data
+            #TE_pol(i,j)=getdata("FDE::data::mode"+num2str(j),"TE polarization fraction"); #Optionally, can also extract TE_pol
         }
     }
-    #data = matrix(1,2);
+    #data = matrix(1,2); #optionally: can write results to a matrix within GUI
     #data(1,1) = wgwidth_array;
     #data(1,2) = neff;
     
-    plot(wgwidth_array*1e6,neff);
+    #plot(wgwidth_array*1e6,neff); #optionally, plots the results
     
     return neff;
 }
 
-#CalcNeffSweepWidth(1.55,4,0.2,0.8,0.02);
+#CalcNeffSweepWidth(1.55,4,0.2,0.8,0.02); #uncomment to run the function like a script, usable from within GUI
 #CalcNeffSweepWidth(1.31,4,0.2,0.8,0.02);

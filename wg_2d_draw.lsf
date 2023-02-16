@@ -1,19 +1,39 @@
-newmode; newmode; redrawoff;
+#SimuTech Group
+#Author: Stephen Lin
+#Date: 2023
+#Ths script is provided by SimuTech's SimuSkills platform.
+#Access to this script is provided along with the TECH support package by SimuTech.
+#The content provided should NOT be shared publicly.
+#The scripts and files included are for educational purpose for SimuTech Group's customers.
+#Customers are free to utilize the scripts and files in their own product design flows.
 
-#define wafer
-thick_Clad = 2.0e-6;
-thick_Si = 0.22e-6; #height of wg
-thick_BOX = 2.0e-6;
-thick_Slab = 0.0e-6; #include if slab, 0 for strip
-width_Si = 0.5e-6; #width of wg
+#This is a setup script that automatically generates geometry based on input parameters
 
-#materials
+#INITIALIZE
+newmode; newmode; redrawoff; #Clear simulation and memory
+
+#PARAMETERS
+#Units: ums
+thick_Si = 0.22; #height of wg
+width_Si = 0.5; #width of wg
+thick_Slab = 0; #include if slab, use 0 for strip waveguides
+thick_Clad = 2.0;
+thick_BOX = 2.0; 
+
+#CONVERSION of UNITS
+#ums
+thick_Clad = thick_Clad*1e-6;
+thick_Si = thick_Si*1e-6;
+thick_BOX = thick_BOX*1e-6;
+thick_Slab = thick_Slab*1e-6;
+width_Si = width_Si*1e-6;
+
+#MATERIALS
 material_Clad = "SiO2 (Glass) - Palik";
 material_BOX = "SiO2 (Glass) - Palik";
 material_Si = "Si (Silicon) - Palik";
-#materials;
 
-#simulation region
+#DEFINE SIMULATION REGION
 sim_width = 2.0e-6; #span amount around wg
 sim_height = 1.0e-6; #span amount around wg
 Xmin = -2e-6; #length of waveguide, propagation in X-axis, z is wafer normal
@@ -24,9 +44,10 @@ X_span = 2*sim_width+width_Si;
 Ymin = -X_span/2;
 Ymax = -Xmin;
 
+#CREATE GEOMETRY
 #draw cladding
-addrect;
-set("name","cladding");
+addrect; #Creates a rectangle geometry object. Newly created objects are automatically selected
+set("name","cladding"); #sets parameters of the SELECTED object. use select() with a name in string format as the argument to select
 set("material",material_Clad);
 set("x",0);
 set("x span", X_span+1e-6);
@@ -34,9 +55,9 @@ set("z min",0);
 set("z max", thick_Clad);
 set("y min",Ymin);
 set("y max",Ymax);
-set("override mesh order from material database", 1);
-set("mesh order",3); #put clading at the very back
-set("alpha",0.3);
+set("override mesh order from material database", 1); #enables custom mesh orders
+set("mesh order",3); #sets the importance of the object when simulation runs, this puts cladding at the very back (least important)
+set("alpha",0.3); #optional: adjust the visual transparency
 
 #draw BOX
 addrect;
@@ -83,10 +104,10 @@ if(thick_Slab!=0){
     set("z max",thick_Slab);
     set("y min",Ymin);
     set("y max", Ymax);
-
 }
 
-addfde;
+#CREATE SOLVER OBJECT
+addfde; #creates an FDE solver
 set("solver type",2);
 set("x",0);
 set("x span",sim_width);
@@ -95,4 +116,3 @@ set("z span",sim_height);
 set("y",0);
 set("mesh cells x",120);
 set("mesh cells z",120);
-#findmodes;
