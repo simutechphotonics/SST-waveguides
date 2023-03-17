@@ -19,6 +19,7 @@ width_Si = 0.5; #width of wg
 thick_Slab = 0; #include if slab, use 0 for strip waveguides
 thick_Clad = 2.0;
 thick_BOX = 2.0; 
+sidewall_angle = 90;
 
 #CONVERSION of UNITS
 #ums
@@ -72,15 +73,15 @@ set("x span",X_span+1e-6);
 set("alpha",0.4);
 
 #draw wg
-addrect;
+addwaveguide;
 set("name","waveguide");
 set("material",material_Si);
-set("y min", Ymin);
-set("y max", Ymax);
-set("z min",0);
-set("z max",thick_Si);
-set("x",0);
-set("x span",width_Si);
+set("z",thick_Si/2);
+set("base width",width_Si);
+set("base height",thick_Si);
+set("base angle",sidewall_angle);
+set("poles",[0,Ymin;0,Ymax]);
+
 
 #draw slab
 if(thick_Slab!=0){
