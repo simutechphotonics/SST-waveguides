@@ -71,17 +71,6 @@ set("x",0);
 set("x span",X_span+1e-6);
 set("alpha",0.4);
 
-#draw si wafer
-addrect;
-set("name","wafer");
-set("material",material_Si);
-set("y min", Ymin);
-set("y max", Ymax);
-set("z min",-thick_BOX);
-set("z max",-thick_BOX-2e6);
-set("x",0);
-set("x span",X_span+1e-6);
-
 #draw wg
 addrect;
 set("name","waveguide");
