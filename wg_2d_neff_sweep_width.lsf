@@ -24,7 +24,7 @@ function CalcNeffSweepWidth(wavelength,modes,wg_start,wg_end,wg_step){
     #SWEEP
     for(i=1:length(wgwidth_array)){
         switchtolayout; #GUI: return back to 'layout' mode within the GUI, enables adjustments to objects
-        setnamed("waveguide","x span",wgwidth_array(i)); #set the object named waveguide's xspan
+        setnamed("waveguide","base width",wgwidth_array(i)); #set the object named waveguide's width
         n=findmodes; #findmodes is equivalent to the GUI 'RUN' button when using an FDE region
         for (j=1:modes){
             neff(i,j) = abs(getdata("FDE::data::mode"+num2str(j),"neff")); #extract mode data

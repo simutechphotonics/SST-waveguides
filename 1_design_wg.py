@@ -10,8 +10,8 @@
 # Import Lumapi
 # Please note and update the version in the path and update accordingly
 import sys, os
-sys.path.append("C:\\Program Files\\Lumerical\\v222\\api\\python\\") #Default windows lumapi path
-sys.path.append("/opt/lumerical/v212/api/python/lumapi.py") #Default linux lumapi path
+sys.path.append("C:\\Program Files\\ANSYS Inc\\v251\Lumerical\\api\\python") #Default windows lumapi path
+sys.path.append("/opt/lumerical/v251/api/python/lumapi.py") #Default linux lumapi path
 sys.path.append(os.path.dirname(__file__)) #Current directory
 
 import lumapi #lumerical's python api
