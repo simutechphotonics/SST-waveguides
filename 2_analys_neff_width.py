@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #PARAMETERS
-wavelength = 1550 #used in line 17,18 to load the .npy file
+wavelength = 1310 #used in line 17,18 to load the .npy file
 
 #LOAD FILE
 neff = np.load("neff"+str(wavelength)+".npy")
